@@ -74,7 +74,11 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, serviceName, s
       }, 3000);
 
     } catch (error) {
-      console.error('Error submitting order:', error);
+      console.error('Error submitting order:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        customerName,
+        selectedService: selectedService?.name
+      });
       toast.error('حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsSubmitting(false);
@@ -217,7 +221,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, serviceName, s
                 <div className="flex items-start space-x-3 space-x-reverse">
                   <Clock className="h-5 w-5 text-amber-600 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">معلومات مهمة</h4>
+                    <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">��علومات مهمة</h4>
                     <p className="text-sm text-amber-700 dark:text-amber-300">
                       {siteSettings.orderNotice}
                     </p>
