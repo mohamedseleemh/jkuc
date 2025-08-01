@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import toast from 'react-hot-toast';
+import { getErrorMessage, getUserFriendlyError } from '../utils/errorMessages';
 import { databaseService } from '../services/database';
 
 export interface Service {
@@ -85,7 +86,7 @@ const defaultPaymentMethods: PaymentMethod[] = [
 
 const defaultSiteSettings: SiteSettings = {
   title: 'KYCtrust - خدمات مالية رقمية موثوقة',
-  description: 'نقدم خدمات مالية رقمية احترافية وآمنة لجميع المنصات العالمية مع ضمان الجودة والموثوقية',
+  description: 'نقدم خدمات ��الية رقمية احترافية وآمنة لجميع المنصات العالمية مع ضمان الجودة والموثوقية',
   orderNotice: 'سيتم التواصل معك يدوياً عبر واتساب بعد إرسال الطلب.',
   whatsappNumber: '+201062453344'
 };
@@ -150,7 +151,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const newOrder = await databaseService.createOrder(order);
       setOrders(prev => [newOrder, ...prev]);
-      toast.success('تم حفظ الطلب بنجاح!');
+      toast.success(getErrorMessage('success', 'order_created', 'ar'));
 
       // Track analytics
       await databaseService.trackEvent('order_created', {
@@ -162,7 +163,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         message: error instanceof Error ? error.message : 'Unknown error',
         orderData: order
       });
-      toast.error('فشل في حفظ الطلب');
+      toast.error(getErrorMessage('order', 'order_creation_failed', 'ar'));
     }
   };
 
@@ -251,7 +252,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       toast.success('تم تحديث طريقة الدفع بنجاح!');
     } catch (error) {
       console.error('Error updating payment method:', error);
-      toast.error('فشل في تحديث ط��يقة الدفع');
+      toast.error('فشل في تحديث طريقة الدفع');
     }
   };
 
