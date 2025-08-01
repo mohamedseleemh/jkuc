@@ -11,6 +11,9 @@ import { initializeGlobalErrorHandler } from './utils/globalErrorHandler';
 
 function App() {
   useEffect(() => {
+    // Initialize global error handler to prevent [object Object] errors
+    initializeGlobalErrorHandler();
+
     // Test error logging in development mode
     if (env.DEBUG_MODE) {
       console.log('🔧 Error logging system initialized');
