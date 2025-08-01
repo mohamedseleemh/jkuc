@@ -4,6 +4,19 @@ interface ImportMetaEnv {
   // Supabase Configuration
   readonly VITE_SUPABASE_URL: string;
   readonly VITE_SUPABASE_ANON_KEY: string;
+
+  // Supabase Advanced Configuration
+  readonly SUPABASE_SERVICE_ROLE_KEY: string;
+  readonly SUPABASE_JWT_SECRET: string;
+
+  // PostgreSQL Database Configuration
+  readonly POSTGRES_URL: string;
+  readonly POSTGRES_URL_NON_POOLING: string;
+  readonly POSTGRES_PRISMA_URL: string;
+  readonly POSTGRES_USER: string;
+  readonly POSTGRES_PASSWORD: string;
+  readonly POSTGRES_HOST: string;
+  readonly POSTGRES_DATABASE: string;
   
   // Application Settings
   readonly VITE_APP_NAME: string;
