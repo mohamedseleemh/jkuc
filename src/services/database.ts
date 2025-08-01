@@ -257,7 +257,14 @@ export class SupabaseDatabaseService implements DatabaseService {
       });
 
     if (error) {
-      console.error('Failed to track event:', error);
+      console.error('Failed to track event:', {
+        message: error.message || 'Unknown error',
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+        eventType,
+        metadata: JSON.stringify(metadata, null, 2)
+      });
       // Don't throw error for analytics to avoid breaking user experience
     }
   }
