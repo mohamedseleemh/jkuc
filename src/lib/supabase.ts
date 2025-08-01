@@ -1,22 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
+import { supabaseConfig, validateDatabaseConfig, connectionOptions } from '../config/database';
 
-// Environment variables with fallbacks for development
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+// Validate configuration
+const validation = validateDatabaseConfig();
 
 // Check if we're in development mode and provide helpful warning
 const isDevelopment = import.meta.env.MODE === 'development';
-const hasValidConfig = supabaseUrl !== 'https://your-project.supabase.co' && supabaseAnonKey !== 'your-anon-key';
+const hasValidConfig = validation.isValid;
 
-if (isDevelopment && !hasValidConfig) {
-  console.warn('⚠️ Supabase not configured. Using local storage fallback for development.');
-  console.warn('To connect to Supabase, create a .env file with:');
-  console.warn('VITE_SUPABASE_URL=your_supabase_url');
-  console.warn('VITE_SUPABASE_ANON_KEY=your_supabase_anon_key');
+if (!hasValidConfig) {
+  if (isDevelopment) {
+    console.warn('⚠️ Supabase configuration issues:');
+    validation.errors.forEach(error => console.warn(`   - ${error}`));
+    console.warn('Using local storage fallback for development.');
+  } else {
+    console.error('❌ Supabase configuration is invalid in production!');
+    validation.errors.forEach(error => console.error(`   - ${error}`));
+  }
 }
 
-// Create client with error handling
-export const supabase = hasValidConfig ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Create client with error handling and proper configuration
+export const supabase = hasValidConfig ? createClient(
+  supabaseConfig.url,
+  supabaseConfig.anonKey,
+  connectionOptions.supabase
+) : null;
 
 // Export a flag to check if Supabase is available
 export const isSupabaseConfigured = hasValidConfig;
