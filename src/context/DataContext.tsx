@@ -122,7 +122,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setOrders(ordersData || []);
 
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error('Error refreshing data:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
       setError('فشل ��ي تحميل البيانات');
       // Always fallback to default data
       setServices(defaultServices);
@@ -155,7 +158,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         customerName: order.customerName
       });
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error('Error creating order:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        orderData: order
+      });
       toast.error('فشل في حفظ الطلب');
     }
   };
@@ -167,7 +173,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setServices(prev => [...prev, newService]);
       toast.success('تم إضافة الخدمة بنجاح!');
     } catch (error) {
-      console.error('Error creating service:', error);
+      console.error('Error creating service:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        serviceData: service
+      });
       toast.error('فشل في إضافة الخدمة');
     }
   };
@@ -242,7 +251,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       toast.success('تم تحديث طريقة الدفع بنجاح!');
     } catch (error) {
       console.error('Error updating payment method:', error);
-      toast.error('فشل في تحديث طريقة الدفع');
+      toast.error('فشل في تحديث ط��يقة الدفع');
     }
   };
 
