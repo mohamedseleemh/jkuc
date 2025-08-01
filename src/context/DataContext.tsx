@@ -127,7 +127,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         message: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : undefined
       });
-      setError('فشل ��ي تحميل البيانات');
+      setError(getErrorMessage('database', 'connection_failed', 'ar'));
       // Always fallback to default data
       setServices(defaultServices);
       setPaymentMethods(defaultPaymentMethods);
