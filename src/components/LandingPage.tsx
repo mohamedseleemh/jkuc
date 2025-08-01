@@ -79,7 +79,7 @@ const LandingPage: React.FC = () => {
       role: 'طالب جامعي',
       avatar: '👨‍🎓',
       rating: 5,
-      comment: 'سهولة في الاستخدام وأمان عالي، تعاملت معهم عدة ��رات ولم أواجه أي مشكلة.',
+      comment: 'سهولة في الاستخدام وأمان عالي، تعاملت معهم عدة ��رات ول�� أواجه أي مشكلة.',
       date: '2024-11-08',
       verified: true
     }
@@ -319,7 +319,7 @@ const LandingPage: React.FC = () => {
                   KYCtrust
                 </h1>
                 <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {language === 'ar' ? 'منصة م��ثوقة' : 'Trusted Platform'}
+                  {language === 'ar' ? 'منصة موثوقة' : 'Trusted Platform'}
                 </p>
               </div>
             </div>
@@ -1007,7 +1007,7 @@ const LandingPage: React.FC = () => {
           <div className="space-y-6">
             {(language === 'ar' ? [
               {
-                q: 'كم يستغرق تنفيذ الطلب؟',
+                q: 'كم يستغرق تنفيذ ��لطلب؟',
                 a: 'معظم طلباتنا يتم ت��فيذها خلال 5 دقائق أو أقل. بعض الخ���مات قد تحتاج إلى وقت أطول قليلاً حسب التعقيد.'
               },
               {
