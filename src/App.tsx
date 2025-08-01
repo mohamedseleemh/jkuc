@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import LandingPage from './components/LandingPage';
@@ -6,6 +6,7 @@ import AdminPanel from './components/AdminPanel';
 import { DataProvider } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { CustomizationProvider } from './context/CustomizationContext';
+import { env } from './utils/env';
 
 function App() {
   return (
