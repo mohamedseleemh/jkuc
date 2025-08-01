@@ -114,10 +114,21 @@ export const env = {
   APP_NAME: getEnv('VITE_APP_NAME', 'KYCtrust'),
   APP_DESCRIPTION: getEnv('VITE_APP_DESCRIPTION', 'Digital Financial Services Platform'),
   APP_URL: getEnv('VITE_APP_URL', 'http://localhost:5173'),
-  
+
   // Supabase
   SUPABASE_URL: getEnv('VITE_SUPABASE_URL'),
   SUPABASE_ANON_KEY: getEnv('VITE_SUPABASE_ANON_KEY'),
+  SUPABASE_SERVICE_ROLE_KEY: getEnv('SUPABASE_SERVICE_ROLE_KEY', ''),
+  SUPABASE_JWT_SECRET: getEnv('SUPABASE_JWT_SECRET', ''),
+
+  // PostgreSQL Database
+  POSTGRES_URL: getEnv('POSTGRES_URL', ''),
+  POSTGRES_URL_NON_POOLING: getEnv('POSTGRES_URL_NON_POOLING', ''),
+  POSTGRES_PRISMA_URL: getEnv('POSTGRES_PRISMA_URL', ''),
+  POSTGRES_USER: getEnv('POSTGRES_USER', 'postgres'),
+  POSTGRES_PASSWORD: getEnv('POSTGRES_PASSWORD', ''),
+  POSTGRES_HOST: getEnv('POSTGRES_HOST', ''),
+  POSTGRES_DATABASE: getEnv('POSTGRES_DATABASE', 'postgres'),
   
   // Contact
   WHATSAPP_NUMBER: getEnv('VITE_WHATSAPP_NUMBER', '+966501234567'),
