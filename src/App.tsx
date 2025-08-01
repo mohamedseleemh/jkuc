@@ -7,6 +7,7 @@ import { DataProvider } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { CustomizationProvider } from './context/CustomizationContext';
 import { env } from './utils/env';
+import { initializeGlobalErrorHandler } from './utils/globalErrorHandler';
 
 function App() {
   useEffect(() => {
