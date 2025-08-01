@@ -33,7 +33,13 @@ class AppStateManager<T> implements StateManager<T> {
       try {
         listener(this.getState(), previousState);
       } catch (error) {
-        console.error('Error in state change listener:', error);
+        // Use proper error logging with serialization
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error in state change listener';
+        console.error('🚨 Error in state change listener:', {
+          message: errorMessage,
+          type: typeof error,
+          timestamp: new Date().toISOString()
+        });
       }
     });
   }
