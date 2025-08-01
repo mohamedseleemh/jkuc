@@ -248,16 +248,22 @@ export class SupabaseDatabaseService implements DatabaseService {
 
   // Analytics
   async trackEvent(eventType: string, metadata: any = {}): Promise<void> {
-    const { error } = await supabase
-      .from('analytics_events')
-      .insert({
-        event_type: eventType,
-        metadata,
-        page_url: window.location.href,
-        referrer_url: document.referrer
-      });
+    try {
+      const { error } = await supabase
+        .from('analytics_events')
+        .insert({
+          event_type: eventType,
+          metadata,
+          page_url: window.location.href,
+          referrer_url: document.referrer
+        });
 
-    if (error) {
+      if (error) {
+        errorHandlers.database(error, 'track_event', 'analytics_events');
+        // Don't throw error for analytics to avoid breaking user experience
+      }
+    } catch (error) {
+      // Catch any network or other errors
       errorHandlers.database(error, 'track_event', 'analytics_events');
       // Don't throw error for analytics to avoid breaking user experience
     }
