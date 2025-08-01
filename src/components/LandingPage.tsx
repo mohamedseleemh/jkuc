@@ -174,7 +174,7 @@ const LandingPage: React.FC = () => {
     },
     {
       icon: Award,
-      title: language === 'ar' ? 'موثوقية عالية' : 'High Reliability',
+      title: language === 'ar' ? 'موثوقية عالي��' : 'High Reliability',
       description: language === 'ar' 
         ? 'ضمان الجودة وإرجاع الأموال في حالة عد�� الرضا' 
         : 'Quality guarantee and money back in case of dissatisfaction',
@@ -784,7 +784,7 @@ const LandingPage: React.FC = () => {
               theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
             }`}>
               {language === 'ar' 
-                ? 'نجمع بين الأم��ن والسرعة والموثوقية لنقدم لك أفضل تجربة في الخدمات المالية'
+                ? 'نجمع بين الأمان والسرعة والموثوقية لنقدم لك أفضل تجربة في الخدمات المالية'
                 : 'We combine security, speed and reliability to provide you with the best experience in financial services'
               }
             </p>
