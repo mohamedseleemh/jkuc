@@ -9,6 +9,20 @@ import { CustomizationProvider } from './context/CustomizationContext';
 import { env } from './utils/env';
 
 function App() {
+  useEffect(() => {
+    // Test error logging in development mode
+    if (env.DEBUG_MODE) {
+      console.log('🔧 Error logging system initialized');
+
+      // Test error logging if URL contains debug parameter
+      if (window.location.search.includes('debug-errors')) {
+        import('./utils/errorTest').then(({ testErrorLogging }) => {
+          setTimeout(testErrorLogging, 1000);
+        });
+      }
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <CustomizationProvider>
