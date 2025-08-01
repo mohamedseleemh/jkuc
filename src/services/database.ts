@@ -452,15 +452,20 @@ export class LocalStorageDatabaseService implements DatabaseService {
   }
 
   async trackEvent(eventType: string, metadata: any = {}): Promise<void> {
-    // Store events locally for potential sync later
-    const events = this.getFromStorage('analytics_events', []);
-    events.push({
-      id: Date.now().toString(),
-      event_type: eventType,
-      metadata,
-      created_at: new Date().toISOString()
-    });
-    this.setToStorage('analytics_events', events);
+    try {
+      // Store events locally for potential sync later
+      const events = this.getFromStorage('analytics_events', []);
+      events.push({
+        id: Date.now().toString(),
+        event_type: eventType,
+        metadata,
+        created_at: new Date().toISOString()
+      });
+      this.setToStorage('analytics_events', events);
+    } catch (error) {
+      errorHandlers.database(error, 'track_event_offline', 'analytics_events');
+      // Don't throw error for analytics to avoid breaking user experience
+    }
   }
 
   async getAnalytics(startDate?: Date, endDate?: Date): Promise<any> {
