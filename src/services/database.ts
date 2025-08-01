@@ -2,6 +2,7 @@ import { supabase } from '../lib/supabase';
 import type { Service, PaymentMethod, SiteSettings, Order } from '../context/DataContext';
 import { appState } from './stateManager';
 import { PERFORMANCE_CONFIG } from '../config/performance';
+import { errorHandlers } from '../utils/errorHandler';
 
 export interface DatabaseService {
   // Services
