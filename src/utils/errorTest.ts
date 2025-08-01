@@ -7,6 +7,7 @@
  */
 
 import { logError, logWarning, logInfo, errorHandlers } from './errorHandler';
+import { testTrackEventErrors, quickTrackEventTest } from './trackEventTest';
 
 /**
  * Test different types of error logging
@@ -65,7 +66,12 @@ export const testErrorLogging = () => {
   logInfo('This is a test info message', { data: 'test' });
 
   console.groupEnd();
-  console.log('✅ Error logging test completed. Check the logs above for properly formatted error messages.');
+
+  // Test trackEvent specifically
+  console.log('🎯 Running specific trackEvent tests...');
+  await testTrackEventErrors();
+
+  console.log('✅ All error logging tests completed. Check the logs above for properly formatted error messages.');
 };
 
 /**
