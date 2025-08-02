@@ -67,18 +67,19 @@ export const testErrorLogging = () => {
 
   console.groupEnd();
 
-  // Test trackEvent specifically
-  console.log('🎯 Running specific trackEvent tests...');
-  await testTrackEventErrors();
 
-  console.log('✅ All error logging tests completed. Check the logs above for properly formatted error messages.');
-};
+console.log("🎯 Running specific trackEvent tests...");
+async function runTrackEventTests() {
+  await testTrackEventErrors();
+  console.log("✅ All error logging tests completed. Check the logs above for properly formatted error messages.");
+}
+runTrackEventTests();
 
 /**
  * Simulate the original "[object Object]" error
  * محاكاة خطأ "[object Object]" الأصلي
  */
-export const simulateOriginalError = () => {
+const simulateOriginalError = () => {
   console.group('❌ Simulating Original Error (BAD)');
   
   const fakeError = {
@@ -97,7 +98,7 @@ export const simulateOriginalError = () => {
  * Show the fixed error logging
  * إظهار تسجيل الأخطاء المُصحح
  */
-export const showFixedErrorLogging = () => {
+const showFixedErrorLogging = () => {
   console.group('✅ Fixed Error Logging (GOOD)');
   
   const fakeError = {
@@ -113,7 +114,7 @@ export const showFixedErrorLogging = () => {
 };
 
 // Export test functions for use in development
-export default {
+module.exports = {
   testErrorLogging,
   simulateOriginalError,
   showFixedErrorLogging
