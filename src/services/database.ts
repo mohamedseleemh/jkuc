@@ -249,23 +249,65 @@ export class SupabaseDatabaseService implements DatabaseService {
   // Analytics
   async trackEvent(eventType: string, metadata: any = {}): Promise<void> {
     try {
+      // Validate inputs to prevent errors
+      if (!eventType || typeof eventType !== 'string') {
+        console.warn('🔧 trackEvent: Invalid eventType provided:', eventType);
+        return;
+      }
+
+      // Ensure supabase is available
+      if (!supabase) {
+        console.warn('🔧 trackEvent: Supabase client not available, using offline storage');
+        return this.offlineTrackEvent(eventType, metadata);
+      }
+
       const { error } = await supabase
         .from('analytics_events')
         .insert({
           event_type: eventType,
-          metadata,
+          metadata: metadata || {},
           page_url: window.location.href,
           referrer_url: document.referrer
         });
 
       if (error) {
-        errorHandlers.database(error, 'track_event', 'analytics_events');
-        // Don't throw error for analytics to avoid breaking user experience
+        // Use specific error handling for trackEvent
+        this.handleTrackEventError(error, eventType, metadata);
       }
     } catch (error) {
       // Catch any network or other errors
+      this.handleTrackEventError(error, eventType, metadata);
+    }
+  }
+
+  // Specific error handler for trackEvent
+  private handleTrackEventError(error: unknown, eventType: string, metadata: any): void {
+    try {
       errorHandlers.database(error, 'track_event', 'analytics_events');
-      // Don't throw error for analytics to avoid breaking user experience
+    } catch (handlerError) {
+      // If the error handler itself fails, use basic logging
+      console.error('🔧 trackEvent error (backup handler):', {
+        originalError: error instanceof Error ? error.message : String(error),
+        eventType,
+        metadata: JSON.stringify(metadata),
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  // Offline trackEvent fallback
+  private offlineTrackEvent(eventType: string, metadata: any): void {
+    try {
+      const events = JSON.parse(localStorage.getItem('pending_analytics') || '[]');
+      events.push({
+        event_type: eventType,
+        metadata,
+        created_at: new Date().toISOString(),
+        offline: true
+      });
+      localStorage.setItem('pending_analytics', JSON.stringify(events));
+    } catch (error) {
+      console.warn('🔧 Failed to store analytics offline:', error);
     }
   }
 
