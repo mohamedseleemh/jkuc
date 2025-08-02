@@ -25,6 +25,11 @@ function App() {
           setTimeout(testErrorLogging, 1000);
         });
       }
+
+      // Run trackEvent verification
+      import('./utils/verifyTrackEventFix').then(({ quickFixTest }) => {
+        setTimeout(quickFixTest, 3000);
+      });
     }
   }, []);
 
