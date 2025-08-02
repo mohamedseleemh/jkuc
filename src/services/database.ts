@@ -271,18 +271,61 @@ export class SupabaseDatabaseService implements DatabaseService {
         });
 
       if (error) {
+        // Check if it's a network error
+        if (this.isNetworkError(error)) {
+          console.warn('🌐 trackEvent: Network error detected, storing offline');
+          return this.offlineTrackEvent(eventType, metadata);
+        }
         // Use specific error handling for trackEvent
         this.handleTrackEventError(error, eventType, metadata);
       }
     } catch (error) {
-      // Catch any network or other errors
+      // Check if it's a network error
+      if (this.isNetworkError(error)) {
+        console.warn('🌐 trackEvent: Network error caught, storing offline');
+        return this.offlineTrackEvent(eventType, metadata);
+      }
+      // Catch any other errors
       this.handleTrackEventError(error, eventType, metadata);
     }
+  }
+
+  // Check if error is network-related
+  private isNetworkError(error: any): boolean {
+    if (!error) return false;
+
+    const errorMessage = error.message || error.toString() || '';
+    const networkErrorPatterns = [
+      'Failed to fetch',
+      'Network request failed',
+      'TypeError: fetch',
+      'ERR_NETWORK',
+      'ERR_INTERNET_DISCONNECTED',
+      'Connection refused',
+      'Timeout',
+      'ENOTFOUND',
+      'ECONNREFUSED'
+    ];
+
+    return networkErrorPatterns.some(pattern =>
+      errorMessage.toLowerCase().includes(pattern.toLowerCase())
+    );
   }
 
   // Specific error handler for trackEvent
   private handleTrackEventError(error: unknown, eventType: string, metadata: any): void {
     try {
+      // For network errors, use less noisy logging
+      if (this.isNetworkError(error)) {
+        console.warn('🌐 trackEvent network issue:', {
+          message: error instanceof Error ? error.message : String(error),
+          eventType,
+          fallback: 'stored offline'
+        });
+        return;
+      }
+
+      // For other errors, use full error handling
       errorHandlers.database(error, 'track_event', 'analytics_events');
     } catch (handlerError) {
       // If the error handler itself fails, use safe logging
@@ -302,12 +345,23 @@ export class SupabaseDatabaseService implements DatabaseService {
     try {
       const events = JSON.parse(localStorage.getItem('pending_analytics') || '[]');
       events.push({
+        id: Date.now().toString(),
         event_type: eventType,
-        metadata,
+        metadata: metadata || {},
+        page_url: window.location.href,
+        referrer_url: document.referrer,
         created_at: new Date().toISOString(),
-        offline: true
+        offline: true,
+        retry_count: 0
       });
+
+      // Keep only last 100 offline events to prevent storage bloat
+      if (events.length > 100) {
+        events.splice(0, events.length - 100);
+      }
+
       localStorage.setItem('pending_analytics', JSON.stringify(events));
+      console.log(`📱 Stored trackEvent offline: ${eventType}`);
     } catch (error) {
       console.warn('🔧 Failed to store analytics offline:', error);
     }
