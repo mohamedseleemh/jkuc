@@ -10,6 +10,7 @@ import { env } from './utils/env';
 import { initializeGlobalErrorHandler } from './utils/globalErrorHandler';
 import './utils/trackEventErrorFix'; // Apply trackEvent error fix immediately
 import './utils/emergencyTrackEventPatch'; // Emergency comprehensive fix
+import './utils/immediateTrackEventTest'; // Test the fix immediately
 
 function App() {
   useEffect(() => {
