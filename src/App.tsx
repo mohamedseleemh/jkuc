@@ -9,6 +9,7 @@ import { CustomizationProvider } from './context/CustomizationContext';
 import { env } from './utils/env';
 import { initializeGlobalErrorHandler } from './utils/globalErrorHandler';
 import './utils/trackEventErrorFix'; // Apply trackEvent error fix immediately
+import './utils/emergencyTrackEventPatch'; // Emergency comprehensive fix
 
 function App() {
   useEffect(() => {
