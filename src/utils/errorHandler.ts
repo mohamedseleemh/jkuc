@@ -64,17 +64,68 @@ export const serializeError = (error: unknown, context?: ErrorContext): Serializ
     };
   }
 
-  // Handle unknown errors
-  return {
-    message: 'Unknown error occurred',
-    name: 'UnknownError',
-    timestamp,
-    context: {
-      ...context,
-      errorType: typeof error,
-      errorValue: String(error)
+  // Handle unknown errors - try harder to extract useful info
+  try {
+    // Try to extract any useful properties from the object
+    if (error && typeof error === 'object') {
+      const obj = error as any;
+
+      // Try to get common error properties
+      const message = obj.message || obj.error || obj.description || obj.msg || 'Unknown error occurred';
+      const name = obj.name || obj.type || obj.constructor?.name || 'UnknownError';
+      const code = obj.code || obj.status || obj.statusCode || '';
+      const details = obj.details || obj.detail || obj.hint || '';
+
+      // Try to get all enumerable properties
+      const properties: Record<string, any> = {};
+      try {
+        Object.keys(obj).forEach(key => {
+          const value = obj[key];
+          if (value !== undefined && value !== null && typeof value !== 'function') {
+            properties[key] = typeof value === 'object' ? JSON.stringify(value) : String(value);
+          }
+        });
+      } catch (e) {
+        properties.serialization_error = 'Could not enumerate properties';
+      }
+
+      return {
+        message: String(message),
+        name: String(name),
+        code: String(code),
+        details: String(details),
+        properties,
+        timestamp,
+        context: {
+          ...context,
+          errorType: typeof error,
+          constructor: obj.constructor?.name || 'Unknown'
+        }
+      };
     }
-  };
+
+    // Fallback for non-object errors
+    return {
+      message: String(error) || 'Unknown error occurred',
+      name: 'UnknownError',
+      timestamp,
+      context: {
+        ...context,
+        errorType: typeof error,
+        primitive: true
+      }
+    };
+  } catch (serializationError) {
+    // Ultimate fallback if even our enhanced serialization fails
+    return {
+      message: 'Error serialization failed',
+      name: 'SerializationError',
+      originalError: String(error),
+      serializationError: String(serializationError),
+      timestamp,
+      context
+    };
+  }
 };
 
 /**
