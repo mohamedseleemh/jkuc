@@ -285,11 +285,13 @@ export class SupabaseDatabaseService implements DatabaseService {
     try {
       errorHandlers.database(error, 'track_event', 'analytics_events');
     } catch (handlerError) {
-      // If the error handler itself fails, use basic logging
+      // If the error handler itself fails, use safe logging
       console.error('🔧 trackEvent error (backup handler):', {
         originalError: error instanceof Error ? error.message : String(error),
+        errorType: typeof error,
+        errorName: error instanceof Error ? error.name : 'Unknown',
         eventType,
-        metadata: JSON.stringify(metadata),
+        metadata: JSON.stringify(metadata || {}),
         timestamp: new Date().toISOString()
       });
     }
