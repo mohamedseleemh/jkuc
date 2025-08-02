@@ -315,6 +315,18 @@ export class SupabaseDatabaseService implements DatabaseService {
   // Specific error handler for trackEvent
   private handleTrackEventError(error: unknown, eventType: string, metadata: any): void {
     try {
+      // Add debugging to understand the error object better
+      if (import.meta.env.DEV) {
+        console.debug('🔍 trackEvent error debug:', {
+          error,
+          type: typeof error,
+          constructor: error?.constructor?.name,
+          keys: error && typeof error === 'object' ? Object.keys(error) : [],
+          isError: error instanceof Error,
+          isNetworkError: this.isNetworkError(error)
+        });
+      }
+
       // For network errors, use less noisy logging
       if (this.isNetworkError(error)) {
         console.warn('🌐 trackEvent network issue:', {
