@@ -87,8 +87,9 @@ export const logError = (
   context?: ErrorContext
 ): void => {
   const serializedError = serializeError(error, context);
-  
-  console.error(`🚨 ${message}:`, serializedError);
+
+  // Use safe logging to prevent [object Object] errors
+  console.error(`🚨 ${message}:`, JSON.stringify(serializedError, null, 2));
   
   // In production, you might want to send errors to an external service
   if (env.IS_PRODUCTION && env.ENABLE_ANALYTICS) {
