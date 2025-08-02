@@ -8,6 +8,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { CustomizationProvider } from './context/CustomizationContext';
 import { env } from './utils/env';
 import { initializeGlobalErrorHandler } from './utils/globalErrorHandler';
+import './utils/trackEventErrorFix'; // Apply trackEvent error fix immediately
 
 function App() {
   useEffect(() => {
