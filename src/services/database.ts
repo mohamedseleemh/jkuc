@@ -495,18 +495,29 @@ export class LocalStorageDatabaseService implements DatabaseService {
 
   async trackEvent(eventType: string, metadata: any = {}): Promise<void> {
     try {
+      // Validate inputs
+      if (!eventType || typeof eventType !== 'string') {
+        console.warn('🔧 Offline trackEvent: Invalid eventType provided:', eventType);
+        return;
+      }
+
       // Store events locally for potential sync later
       const events = this.getFromStorage('analytics_events', []);
       events.push({
         id: Date.now().toString(),
         event_type: eventType,
-        metadata,
-        created_at: new Date().toISOString()
+        metadata: metadata || {},
+        created_at: new Date().toISOString(),
+        offline: true
       });
       this.setToStorage('analytics_events', events);
     } catch (error) {
-      errorHandlers.database(error, 'track_event_offline', 'analytics_events');
-      // Don't throw error for analytics to avoid breaking user experience
+      // Use safe error logging for offline mode
+      console.error('🔧 Offline trackEvent error:', {
+        message: error instanceof Error ? error.message : String(error),
+        eventType,
+        timestamp: new Date().toISOString()
+      });
     }
   }
 
