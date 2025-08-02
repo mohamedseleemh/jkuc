@@ -3,6 +3,7 @@ import type { Service, PaymentMethod, SiteSettings, Order } from '../context/Dat
 import { appState } from './stateManager';
 import { PERFORMANCE_CONFIG } from '../config/performance';
 import { errorHandlers } from '../utils/errorHandler';
+import { errorRateLimiter } from '../utils/errorRateLimiter';
 
 export interface DatabaseService {
   // Services
@@ -337,8 +338,13 @@ export class SupabaseDatabaseService implements DatabaseService {
         return;
       }
 
-      // For other errors, use full error handling
-      errorHandlers.database(error, 'track_event', 'analytics_events');
+      // For other errors, use full error handling with rate limiting
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorKey = errorRateLimiter.createErrorKey('track_event', errorMessage);
+
+      if (errorRateLimiter.shouldLogError(errorKey)) {
+        errorHandlers.database(error, 'track_event', 'analytics_events');
+      }
     } catch (handlerError) {
       // If the error handler itself fails, use safe logging
       console.error('🔧 trackEvent error (backup handler):', {
